@@ -1,3 +1,4 @@
+#-*-coding:utf-8-*-
 from time import localtime, strftime, time
 from prettytable import PrettyTable
 
@@ -105,86 +106,100 @@ if __name__ == '__main__':
     today = strftime("%Y-%m-%d", localtime(time()))
     my_datas = getDatas('data.csv')
 
-    # developer = ['解决者', '吴吉', '黄晨', '张夏泉', '沈滔', '秦真', '罗沙', '袁章珂', '龙庆玉', '龚树理', '谭啸', '邹佳丽', '温鑫', '曾俊', '孙阳', '尹君', '李雄', '褚亚良', '李星', '潘清', '孙运', '熊望', '彭发祥', '赵钰铭', '唐杰康', '陈鉴嘉', '姚伟华', '曾彤芳', '丁蓓蓓', '温春梅', '贺尹红', '肖城', '高志辉', '文玉婷', '李仁', '朱双平', '刘娟', '饶滔', '张峰浦', '毛志敏', '伍洋', '许年贵', '张科君', '王佳乐', '李恋', '李世彧', '徐益森', '赖柏良', '刘海霞', '罗闪', '梅端倪', '刘超', '胡世鹏', '董文静', '陈高峰', '张哲', '叶贤良', '李宏', '阮荣', '任佳乐', '马颖嘉']
-    # index = getIndex(my_datas, '解决者')
-    # print(index)
-    # for i in my_datas:
-    #     if (i[index] not in developer) and i[index] != '':
-    #         developer.append(i[index])
-    # print(developer)
-
     developer = ['褚亚良', '张夏泉', '李星', '沈滔', '尹君', '黄晨', '袁章珂', '温鑫', '边家家', '龙庆玉', '龚树理', '徐益森', '曾俊', '李雄', '王佳乐', '秦真', '饶滔', '吴吉', '罗沙', '毛志敏', '谭啸', '贺尹红', '陈金强']
-    # developer_list1 = [{'指派给':i '创建日期': today}]
-    developer_list2 = []
-    developer_list3 = []
+    developer_list1 = [{'指派给':i, 'Bug状态': '激活'} for i in developer]
+    developer_list2 = [{'解决者':i, "解决日期": today} for i in developer]
+    developer_dict1 = {}
+    developer_dict2 = {}
+    # 待解决BUG数
+    # print('———————————————————— 待解决BUG数 ————————————————————')
+    for i in developer_list1:
+        num = getdateNum(my_datas, i)
+        # print("{} 待解决BUG数为：{}".format(i['指派给'],num))
+        developer_dict1.update({i['指派给']:num})
 
+    # 今日解决BUG数
+    # print('———————————————————— 今日解决BUG数 ————————————————————')
+    for i in developer_list2:
+        num = getdateNum(my_datas, i)
+        # print("{} 今日解决BUG数为：{}".format(i['解决者'],num))
+        developer_dict2.update({i['解决者']:num})
 
-    # # tester = ['由谁创建', '潘静', '王庆宁', '罗闪', '贾真', '袁妙妙', '苏林子', '黄超', '张友吉', '伍洋', '刘娟', '梅端倪', '曹雨荷', '丁蓓蓓', '李仁', '邓日业', '刘海霞', '朱双平', '冷梅', '王清', '杨玲', '曾彤芳', '曾光彬', '陈旭', '张锐', '肖城', '刘志成', '温春梅', '刘超', '阮荣', '陈湘娜', '董文静', '任佳乐', '陈高峰', '唐杰康', '赵钰铭', '张哲', '程林珊']
-    # tester = ['袁妙妙', '贾真', '潘静', '苏林子', '伍洋', '朱双平', '罗闪', '黄超', '王庆宁', '冷梅']
-    # tester_list1 = [{'由谁创建':i, "创建日期": today} for i in tester]
-    # tester_list2 = [{'由谁创建':i, "关闭日期": today} for i in tester]
-    # tester_list3 = [{'指派给':i, "Bug状态": '已解决'} for i in tester]
-    # tester_dict1 = {}
-    # tester_dict2 = {}
-    # tester_dict3 = {}
-    # # 提交BUG数
-    # # print('———————————————————— 提交BUG数 ————————————————————')
-    # for i in tester_list1:
-    #     num = getdateNum(my_datas, i)
-    #     # print("{} 今天提交BUG数为：{}".format(i['由谁创建'],num))
-    #     tester_dict1.update({i['由谁创建']:num})
-    #
-    # # 关闭BUG数
-    # # print('———————————————————— 关闭BUG数 ————————————————————')
-    # for i in tester_list2:
-    #     num = getdateNum(my_datas, i)
-    #     # print("{} 今天关闭BUG数为：{}".format(i['由谁创建'],num))
-    #     tester_dict2.update({i['由谁创建']: num})
-    #
-    # # 待验证BUG数
-    # # print('———————————————————— 待验证BUG数 ————————————————————')
-    # for i in tester_list3:
-    #     num = getdateNum(my_datas, i)
-    #     # print("{} 待验证BUG数为：{}".format(i['指派给'],num))
-    #     tester_dict3.update({i['指派给']: num})
-    #
-    # x = PrettyTable(["测试人员", "今日提交BUG数", "今日验证BUG数", "待验证BUG数"])
-    # for i in range(len(tester)):
-    #     list = []
-    #     list.append(tester[i])
-    #     list.append(tester_dict1[tester[i]])
-    #     list.append(tester_dict2[tester[i]])
-    #     list.append(tester_dict3[tester[i]])
-    #     x.add_row(list)
-    # print(x)
-    #
-    # activation_bugs = statisticsDta(my_datas,today)
-    #
-    # # 每日新增BUG数
-    # dict = {"2020-11-16":getdateNum(my_datas, {"创建日期": '2020-11-16'}),
-    #         "2020-11-17":getdateNum(my_datas, {"创建日期": '2020-11-17'}),
-    #         "2020-11-18":getdateNum(my_datas, {"创建日期": '2020-11-18'}),
-    #         today:getdateNum(my_datas, {"创建日期": today})}
-    # draw_chart(dict, 'bugs', 'bug_datas', '每日新增bug数', './img/每日新增bug数.jpg')
-    #
-    # # 每日待修复BUG数
-    # dict = {"2020-11-16":90,
-    #         "2020-11-17":97,
-    #         "2020-11-18":117,
-    #         today:activation_bugs}
-    # draw_chart(dict, 'bugs', 'bug_datas', '每日待修复BUG数', './img/每日待修复BUG数.jpg')
-    #
-    # # 每日已解决BUG数
-    # dict = {"2020-11-16":getdateNum(my_datas, {"解决日期": '2020-11-16'}),
-    #         "2020-11-17":getdateNum(my_datas, {"解决日期": '2020-11-17'}),
-    #         "2020-11-18":getdateNum(my_datas, {"解决日期": '2020-11-18'}),
-    #         today:getdateNum(my_datas, {"解决日期": today})}
-    # draw_chart(dict, 'bugs', 'bug_datas', '每日解决bug数', './img/每日解决bug数.jpg')
-    #
-    # # 每日关闭BUG数
-    # dict = {"2020-11-16":getdateNum(my_datas, {"关闭日期": '2020-11-16'}),
-    #         "2020-11-17":getdateNum(my_datas, {"关闭日期": '2020-11-17'}),
-    #         "2020-11-18":getdateNum(my_datas, {"关闭日期": '2020-11-18'}),
-    #         today:getdateNum(my_datas, {"关闭日期": today})}
-    # draw_chart(dict, 'bugs', 'bug_datas', '每日关闭bug数', './img/每日关闭bug数.jpg')
+    y = PrettyTable(["开发人员", "待解决BUG数", "今日解决BUG数"])
+    for i in range(len(developer)):
+        list = []
+        list.append(developer[i])
+        list.append(developer_dict1[developer[i]])
+        list.append(developer_dict2[developer[i]])
+        y.add_row(list)
+    print(y)
+
+    # tester = ['由谁创建', '潘静', '王庆宁', '罗闪', '贾真', '袁妙妙', '苏林子', '黄超', '张友吉', '伍洋', '刘娟', '梅端倪', '曹雨荷', '丁蓓蓓', '李仁', '邓日业', '刘海霞', '朱双平', '冷梅', '王清', '杨玲', '曾彤芳', '曾光彬', '陈旭', '张锐', '肖城', '刘志成', '温春梅', '刘超', '阮荣', '陈湘娜', '董文静', '任佳乐', '陈高峰', '唐杰康', '赵钰铭', '张哲', '程林珊']
+    tester = ['袁妙妙', '贾真', '潘静', '苏林子', '伍洋', '朱双平', '罗闪', '黄超', '王庆宁', '冷梅']
+    tester_list1 = [{'由谁创建':i, "创建日期": today} for i in tester]
+    tester_list2 = [{'由谁创建':i, "关闭日期": today} for i in tester]
+    tester_list3 = [{'指派给':i, "Bug状态": '已解决'} for i in tester]
+    tester_dict1 = {}
+    tester_dict2 = {}
+    tester_dict3 = {}
+    # 提交BUG数
+    # print('———————————————————— 提交BUG数 ————————————————————')
+    for i in tester_list1:
+        num = getdateNum(my_datas, i)
+        # print("{} 今天提交BUG数为：{}".format(i['由谁创建'],num))
+        tester_dict1.update({i['由谁创建']:num})
+
+    # 关闭BUG数
+    # print('———————————————————— 关闭BUG数 ————————————————————')
+    for i in tester_list2:
+        num = getdateNum(my_datas, i)
+        # print("{} 今天关闭BUG数为：{}".format(i['由谁创建'],num))
+        tester_dict2.update({i['由谁创建']: num})
+
+    # 待验证BUG数
+    # print('———————————————————— 待验证BUG数 ————————————————————')
+    for i in tester_list3:
+        num = getdateNum(my_datas, i)
+        # print("{} 待验证BUG数为：{}".format(i['指派给'],num))
+        tester_dict3.update({i['指派给']: num})
+
+    x = PrettyTable(["测试人员", "今日提交BUG数", "今日验证BUG数", "待验证BUG数"])
+    for i in range(len(tester)):
+        list = []
+        list.append(tester[i])
+        list.append(tester_dict1[tester[i]])
+        list.append(tester_dict2[tester[i]])
+        list.append(tester_dict3[tester[i]])
+        x.add_row(list)
+    print(x)
+
+    activation_bugs = statisticsDta(my_datas,today)
+
+    # 每日新增BUG数
+    dict = {"2020-11-16":getdateNum(my_datas, {"创建日期": '2020-11-16'}),
+            "2020-11-17":getdateNum(my_datas, {"创建日期": '2020-11-17'}),
+            "2020-11-18":getdateNum(my_datas, {"创建日期": '2020-11-18'}),
+            today:getdateNum(my_datas, {"创建日期": today})}
+    draw_chart(dict, 'bugs', 'bug_datas', '每日新增bug数', './img/每日新增bug数.jpg')
+
+    # 每日待修复BUG数
+    dict = {"2020-11-16":90,
+            "2020-11-17":97,
+            "2020-11-18":117,
+            today:activation_bugs}
+    draw_chart(dict, 'bugs', 'bug_datas', '每日待修复BUG数', './img/每日待修复BUG数.jpg')
+
+    # 每日已解决BUG数
+    dict = {"2020-11-16":getdateNum(my_datas, {"解决日期": '2020-11-16'}),
+            "2020-11-17":getdateNum(my_datas, {"解决日期": '2020-11-17'}),
+            "2020-11-18":getdateNum(my_datas, {"解决日期": '2020-11-18'}),
+            today:getdateNum(my_datas, {"解决日期": today})}
+    draw_chart(dict, 'bugs', 'bug_datas', '每日解决bug数', './img/每日解决bug数.jpg')
+
+    # 每日关闭BUG数
+    dict = {"2020-11-16":getdateNum(my_datas, {"关闭日期": '2020-11-16'}),
+            "2020-11-17":getdateNum(my_datas, {"关闭日期": '2020-11-17'}),
+            "2020-11-18":getdateNum(my_datas, {"关闭日期": '2020-11-18'}),
+            today:getdateNum(my_datas, {"关闭日期": today})}
+    draw_chart(dict, 'bugs', 'bug_datas', '每日关闭bug数', './img/每日关闭bug数.jpg')
 
