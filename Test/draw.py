@@ -4,6 +4,8 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 
+# 画图
+
 def draw_chart(dict, label_name, y_name, title, path):
     # 解决plt画图中文不能显示的问题
     plt.rcParams['font.sans-serif']=['SimHei']

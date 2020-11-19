@@ -7,6 +7,8 @@ import numpy as np
 import math
 import csv
 
+# 脚本统计数据
+
 # 获取数据
 def getDatas(path) -> list:
     with open (path, newline='', encoding="UTF-8") as csvfile:

@@ -1,5 +1,6 @@
 import csv
 
+# 用于多项目合并CSV文件
 
 with open('data2.csv', newline='', encoding="UTF-8") as csvfile:
     spamreader = csv.reader(csvfile, delimiter=',', quotechar='"')
