@@ -103,8 +103,9 @@ def draw_chart(dict, label_name, y_name, title, path):
 
 
 if __name__ == '__main__':
-    today = strftime("%Y-%m-%d", localtime(time()))
-    my_datas = getDatas('data.csv')
+    # today = strftime("%Y-%m-%d", localtime(time()))
+    today = "2020-11-19"
+    my_datas = getDatas('data3.csv')
 
     developer = ['褚亚良', '张夏泉', '李星', '沈滔', '尹君', '黄晨', '袁章珂', '温鑫', '边家家', '龙庆玉', '龚树理', '徐益森', '曾俊', '李雄', '王佳乐', '秦真', '饶滔', '吴吉', '罗沙', '毛志敏', '谭啸', '贺尹红', '陈金强']
     developer_list1 = [{'指派给':i, 'Bug状态': '激活'} for i in developer]
@@ -186,7 +187,7 @@ if __name__ == '__main__':
     dict = {"2020-11-16":90,
             "2020-11-17":97,
             "2020-11-18":117,
-            today:activation_bugs}
+            today:activation_bugs} #
     draw_chart(dict, 'bugs', 'bug_datas', '每日待修复BUG数', './img/每日待修复BUG数.jpg')
 
     # 每日已解决BUG数
