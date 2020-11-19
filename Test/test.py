@@ -1,67 +1,190 @@
+from time import localtime, strftime, time
+from prettytable import PrettyTable
+
+import matplotlib.pyplot as plt
+import numpy as np
+import math
 import csv
 
-# n = 0
-# create_time = 20
-
 # 获取数据
-def getDatas(path):
+def getDatas(path) -> list:
     with open (path, newline='', encoding="UTF-8") as csvfile:
         spamreader = csv.reader(csvfile, delimiter=',', quotechar='"')
         my_datas = [data for data in spamreader]
     return my_datas
 
-my_datas = getDatas('data.csv')
+# 获取下标
+def getIndex(my_datas, str) -> int:
+    index = my_datas[0].index(str)
+    return index
 
-print(my_datas[0].index("严重程度"))
+def getdateNum(my_datas, dict) -> int:
+    dict_len = len(dict)
+    str = [key for key in dict.keys()]
+    key = [getIndex(my_datas, str) for str in str]
+    value = [value for value in dict.values()]
+    result = []
 
-print(my_datas[0].index("创建日期"))
-
-def getdateNum(condition) -> int:
-    index = my_datas[0].index(condition)
-    count = 0
-    for i in range(1, len(my_datas)):
-        if my_datas[i][index] == "2020-11-13":
-            count = count + 1
-    return count
-
-print(getdateNum("创建日期"))
-
-
-
-
-
-
-
+    for list in my_datas:
+        for i in range(dict_len):
+            if list[key[i]] != value[i]:
+                break
+            if i == dict_len-1 and list[key[i]] == value[i]:
+                result.append(list)
+    result_len = len(result)
+    return result_len
 
 
-
-# for list in my_data:
-#     for i in range(dict_len):
-#         if list[key[i]] != value[i]:
-#             break
-#         if i == dict_len - 1 and list[key[i]] == value[i]:
-#             result.append(list)
-# result_len = len(result)
-
-# for index in range(len(my_data[0])):
-#     print("{} : {}".format(my_data[0][index], index),end=' , ')
-#
-# for i in range(1,len(my_data)):
-#     print(my_data[i])
+def statisticsDta(my_datas,today) -> int:
+    print("每日新增BUG数：{}".format(getdateNum(my_datas, {"创建日期": today})))
+    print("每日待修复BUG数：{}".format(getdateNum(my_datas, {"Bug状态": '激活'})))
+    activation_bugs = getdateNum(my_datas, {"Bug状态": '激活'})
+    print("每日已解决BUG数：{}".format(getdateNum(my_datas, {"解决日期": today})))
+    print("每日关闭BUG数：{}".format(getdateNum(my_datas, {"关闭日期": today})))
+    return activation_bugs
 
 
+def draw_chart(dict, label_name, y_name, title, path):
+    # 解决plt画图中文不能显示的问题
+    plt.rcParams['font.sans-serif']=['SimHei']
+    plt.rcParams['axes.unicode_minus'] = False
+
+    # 数据初始化
+    labels = []
+    bugs_data = []
+    for key,value in dict.items():
+        labels.append(key)
+        bugs_data.append(value)
+
+    x = np.arange(len(labels))  # the label locations
+
+    # 动态修改y
+    num = max([num for num in dict.values()])
+    num = math.ceil(num/10)*10+20
+    if num>100:
+        y = np.arange(0, num+10, 20)
+    else:
+        y = np.arange(0, num, 10)
+
+    # fig：
+    # ax：图表内容对象
+    fig, ax = plt.subplots()
+
+    # width：柱状图的宽度
+    bar_width = 0.5
+    # 画柱状图
+    Bar_chart = ax.bar(x, bugs_data, bar_width, label=label_name, color='#87CEFA',zorder=5)
+
+    # 增加标签（x,y,title）
+    ax.set_yticks(y)
+    ax.set_ylabel(y_name)      # bug_data
+    ax.set_title(title)        # "每日新增bug数"
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+    ax.legend()
+
+    # 为柱状图添加数据标签
+    def autolabel(rects):
+        for rect in rects:
+            height = rect.get_height()
+            ax.annotate('{}'.format(height),
+                        xy=(rect.get_x() + rect.get_width() / 2, height),
+                        xytext=(0, 3),  # 3 点垂直偏移指数
+                        textcoords="offset points",
+                        ha='center', va='bottom')
+
+    autolabel(Bar_chart)
+    fig.tight_layout()
+    plt.grid(axis='y')
+    # 保存图片
+    plt.savefig(path)
+    plt.show()
 
 
+if __name__ == '__main__':
+    today = strftime("%Y-%m-%d", localtime(time()))
+    my_datas = getDatas('data.csv')
 
-    # print(type(spamreader))
-    # print(spamreader.line_num)
-    # for row in spamreader:
-    #     # row为list对象
-    #     # if row[20] == '2020-10-20':
-    #     if row[19] == '张锐':
-    #         n+=1
-    #         print(row)
-    # print(n)
+    # developer = ['解决者', '吴吉', '黄晨', '张夏泉', '沈滔', '秦真', '罗沙', '袁章珂', '龙庆玉', '龚树理', '谭啸', '邹佳丽', '温鑫', '曾俊', '孙阳', '尹君', '李雄', '褚亚良', '李星', '潘清', '孙运', '熊望', '彭发祥', '赵钰铭', '唐杰康', '陈鉴嘉', '姚伟华', '曾彤芳', '丁蓓蓓', '温春梅', '贺尹红', '肖城', '高志辉', '文玉婷', '李仁', '朱双平', '刘娟', '饶滔', '张峰浦', '毛志敏', '伍洋', '许年贵', '张科君', '王佳乐', '李恋', '李世彧', '徐益森', '赖柏良', '刘海霞', '罗闪', '梅端倪', '刘超', '胡世鹏', '董文静', '陈高峰', '张哲', '叶贤良', '李宏', '阮荣', '任佳乐', '马颖嘉']
+    # index = getIndex(my_datas, '解决者')
+    # print(index)
+    # for i in my_datas:
+    #     if (i[index] not in developer) and i[index] != '':
+    #         developer.append(i[index])
+    # print(developer)
 
-# if __name__ == '__main__':
-#     pass
+    developer = ['褚亚良', '张夏泉', '李星', '沈滔', '尹君', '黄晨', '袁章珂', '温鑫', '边家家', '龙庆玉', '龚树理', '徐益森', '曾俊', '李雄', '王佳乐', '秦真', '饶滔', '吴吉', '罗沙', '毛志敏', '谭啸', '贺尹红', '陈金强']
+    # developer_list1 = [{'指派给':i '创建日期': today}]
+    developer_list2 = []
+    developer_list3 = []
+
+
+    # # tester = ['由谁创建', '潘静', '王庆宁', '罗闪', '贾真', '袁妙妙', '苏林子', '黄超', '张友吉', '伍洋', '刘娟', '梅端倪', '曹雨荷', '丁蓓蓓', '李仁', '邓日业', '刘海霞', '朱双平', '冷梅', '王清', '杨玲', '曾彤芳', '曾光彬', '陈旭', '张锐', '肖城', '刘志成', '温春梅', '刘超', '阮荣', '陈湘娜', '董文静', '任佳乐', '陈高峰', '唐杰康', '赵钰铭', '张哲', '程林珊']
+    # tester = ['袁妙妙', '贾真', '潘静', '苏林子', '伍洋', '朱双平', '罗闪', '黄超', '王庆宁', '冷梅']
+    # tester_list1 = [{'由谁创建':i, "创建日期": today} for i in tester]
+    # tester_list2 = [{'由谁创建':i, "关闭日期": today} for i in tester]
+    # tester_list3 = [{'指派给':i, "Bug状态": '已解决'} for i in tester]
+    # tester_dict1 = {}
+    # tester_dict2 = {}
+    # tester_dict3 = {}
+    # # 提交BUG数
+    # # print('———————————————————— 提交BUG数 ————————————————————')
+    # for i in tester_list1:
+    #     num = getdateNum(my_datas, i)
+    #     # print("{} 今天提交BUG数为：{}".format(i['由谁创建'],num))
+    #     tester_dict1.update({i['由谁创建']:num})
+    #
+    # # 关闭BUG数
+    # # print('———————————————————— 关闭BUG数 ————————————————————')
+    # for i in tester_list2:
+    #     num = getdateNum(my_datas, i)
+    #     # print("{} 今天关闭BUG数为：{}".format(i['由谁创建'],num))
+    #     tester_dict2.update({i['由谁创建']: num})
+    #
+    # # 待验证BUG数
+    # # print('———————————————————— 待验证BUG数 ————————————————————')
+    # for i in tester_list3:
+    #     num = getdateNum(my_datas, i)
+    #     # print("{} 待验证BUG数为：{}".format(i['指派给'],num))
+    #     tester_dict3.update({i['指派给']: num})
+    #
+    # x = PrettyTable(["测试人员", "今日提交BUG数", "今日验证BUG数", "待验证BUG数"])
+    # for i in range(len(tester)):
+    #     list = []
+    #     list.append(tester[i])
+    #     list.append(tester_dict1[tester[i]])
+    #     list.append(tester_dict2[tester[i]])
+    #     list.append(tester_dict3[tester[i]])
+    #     x.add_row(list)
+    # print(x)
+    #
+    # activation_bugs = statisticsDta(my_datas,today)
+    #
+    # # 每日新增BUG数
+    # dict = {"2020-11-16":getdateNum(my_datas, {"创建日期": '2020-11-16'}),
+    #         "2020-11-17":getdateNum(my_datas, {"创建日期": '2020-11-17'}),
+    #         "2020-11-18":getdateNum(my_datas, {"创建日期": '2020-11-18'}),
+    #         today:getdateNum(my_datas, {"创建日期": today})}
+    # draw_chart(dict, 'bugs', 'bug_datas', '每日新增bug数', './img/每日新增bug数.jpg')
+    #
+    # # 每日待修复BUG数
+    # dict = {"2020-11-16":90,
+    #         "2020-11-17":97,
+    #         "2020-11-18":117,
+    #         today:activation_bugs}
+    # draw_chart(dict, 'bugs', 'bug_datas', '每日待修复BUG数', './img/每日待修复BUG数.jpg')
+    #
+    # # 每日已解决BUG数
+    # dict = {"2020-11-16":getdateNum(my_datas, {"解决日期": '2020-11-16'}),
+    #         "2020-11-17":getdateNum(my_datas, {"解决日期": '2020-11-17'}),
+    #         "2020-11-18":getdateNum(my_datas, {"解决日期": '2020-11-18'}),
+    #         today:getdateNum(my_datas, {"解决日期": today})}
+    # draw_chart(dict, 'bugs', 'bug_datas', '每日解决bug数', './img/每日解决bug数.jpg')
+    #
+    # # 每日关闭BUG数
+    # dict = {"2020-11-16":getdateNum(my_datas, {"关闭日期": '2020-11-16'}),
+    #         "2020-11-17":getdateNum(my_datas, {"关闭日期": '2020-11-17'}),
+    #         "2020-11-18":getdateNum(my_datas, {"关闭日期": '2020-11-18'}),
+    #         today:getdateNum(my_datas, {"关闭日期": today})}
+    # draw_chart(dict, 'bugs', 'bug_datas', '每日关闭bug数', './img/每日关闭bug数.jpg')
+

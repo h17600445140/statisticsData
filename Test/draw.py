@@ -1,3 +1,5 @@
+import math
+
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
@@ -15,7 +17,11 @@ def draw_chart(dict, label_name, y_name, title, path):
         bugs_data.append(value)
 
     x = np.arange(len(labels))  # the label locations
-    y = np.arange(0, 50, 5)
+
+    # 动态修改y
+    num = max([num for num in dict.values()])
+    num = math.ceil(num/10)*10+20
+    y = np.arange(0, num, 5)
 
     # fig：
     # ax：图表内容对象
