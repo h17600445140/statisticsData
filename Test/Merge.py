@@ -11,13 +11,13 @@ with open('data1.csv', newline='', encoding="UTF-8") as csvfile1:
     my_data1 = [data for data in spamreader]
 
 
-with open("data3.csv", 'w', newline='', encoding="UTF-8") as csvfile2:
+with open("data.csv", 'w', newline='', encoding="UTF-8") as csvfile2:
     writer = csv.writer(csvfile2)
     writer.writerows(my_data)
     writer.writerows(my_data1)
 
 
-with open('data3.csv', newline='', encoding="UTF-8") as csvfile:
+with open('data.csv', newline='', encoding="UTF-8") as csvfile:
     spamreader = csv.reader(csvfile, delimiter=',', quotechar='"')
     my_datas = [data for data in spamreader]
 

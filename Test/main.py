@@ -1,4 +1,6 @@
 import csv
+import time
+import datetime
 
 
 def test(d):
@@ -22,8 +24,8 @@ def test(d):
     return result_len
 
 if __name__ == '__main__':
-    d = {22: '孙阳'}
-    print(test(d))
+    # d = {22: '孙阳'}
+    # print(test(d))
 
 # Bug编号 : 0
 # 所属产品 : 1
@@ -61,4 +63,11 @@ if __name__ == '__main__':
 # 最后修改者 : 33
 # 修改日期 : 34
 # 附件 : 35
+
+    # print(time.ctime())
+    # print(time.time())
+    # print(time.localtime(time.time()))
+    # print(time.strftime("%Y-%m-%d", time.localtime(time.time())))
+
+    a = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
 
