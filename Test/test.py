@@ -78,7 +78,7 @@ def draw_chart(dict, label_name, y_name, title, path):
     # 画柱状图
     Bar_chart = ax.bar(x, bugs_data, bar_width, label=label_name, color='#87CEFA',zorder=5)
 
-    # 增加标签（x,y,title）
+     # 增加标签（x,y,title）
     ax.set_yticks(y)
     ax.set_ylabel(y_name)      # bug_data
     ax.set_title(title)        # "每日新增bug数"
@@ -99,6 +99,10 @@ def draw_chart(dict, label_name, y_name, title, path):
     autolabel(Bar_chart)
     fig.tight_layout()
     plt.grid(axis='y')
+
+    if len(x) > 6:
+        plt.xticks(rotation=315)
+
     # 保存图片
     plt.savefig(path)
     plt.show()
@@ -200,9 +204,11 @@ if __name__ == '__main__':
     my_datas = getDatas('data.csv')
 
     # 初始化开发测试人员
-    developer = ['褚亚良', '张夏泉', '李星', '沈滔', '尹君', '黄晨', '袁章珂', '温鑫', '边家家', '龙庆玉', '龚树理', '徐益森', '曾俊', '李雄', '王佳乐', '秦真',
-                 '饶滔', '吴吉', '罗沙', '毛志敏', '谭啸', '贺尹红', '陈金强']
-    tester = ['袁妙妙', '贾真', '潘静', '苏林子', '伍洋', '朱双平', '罗闪', '黄超', '王庆宁', '冷梅']
+    # developer = ['褚亚良', '张夏泉', '李星', '沈滔', '尹君', '黄晨', '袁章珂', '温鑫', '边家家', '龙庆玉', '龚树理', '徐益森', '曾俊', '李雄', '王佳乐', '秦真',
+    #              '饶滔', '吴吉', '罗沙', '毛志敏', '谭啸', '贺尹红', '陈金强']
+    developer = ["马颖嘉", "蔡义逢", "赵涛涛", "龚树理", "张琦", "李坚", "荆斌", "池宇", "王盼"]
+    # tester = ['袁妙妙', '贾真', '潘静', '苏林子', '伍洋', '朱双平', '罗闪', '黄超', '王庆宁', '冷梅']
+    tester = ["王庆宁", "袁妙妙", "贾真", "潘静", "黄超", "苏林子"]
 
     # 统计开发/测试详细数据
     statisticsData(my_datas,developer,tester,today)
@@ -211,8 +217,8 @@ if __name__ == '__main__':
     activation_bugs = statisticsDta(my_datas,today)
 
     # 画图表
-    list = ["2020-11-16", "2020-11-17", "2020-11-18", "2020-11-19", today]
-    dict = {"2020-11-16":90, "2020-11-17":97, "2020-11-18":117, "2020-11-19": 139, today:activation_bugs}
+    list = ["2020-11-23", today]
+    dict = {"2020-11-23":69, today:activation_bugs}
     draw(list, dict)
 
 
