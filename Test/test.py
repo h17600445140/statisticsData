@@ -198,28 +198,29 @@ def draw(list, dict):
 
 
 if __name__ == '__main__':
-    today = strftime("%Y-%m-%d", localtime(time()))
-
-    # 获取数据文件
+    # today = strftime("%Y-%m-%d", localtime(time()))
+    #
+    # # 获取数据文件
     my_datas = getDatas('data.csv')
+    print(my_datas)
 
-    # 初始化开发测试人员
-    # developer = ['褚亚良', '张夏泉', '李星', '沈滔', '尹君', '黄晨', '袁章珂', '温鑫', '边家家', '龙庆玉', '龚树理', '徐益森', '曾俊', '李雄', '王佳乐', '秦真',
-    #              '饶滔', '吴吉', '罗沙', '毛志敏', '谭啸', '贺尹红', '陈金强']
-    developer = ["马颖嘉", "蔡义逢", "赵涛涛", "龚树理", "张琦", "李坚", "荆斌", "池宇", "王盼"]
-    # tester = ['袁妙妙', '贾真', '潘静', '苏林子', '伍洋', '朱双平', '罗闪', '黄超', '王庆宁', '冷梅']
-    tester = ["王庆宁", "袁妙妙", "贾真", "潘静", "黄超", "苏林子"]
-
-    # 统计开发/测试详细数据
-    statisticsData(my_datas,developer,tester,today)
-
-    # 统计总数居 -> 返回当日激活BUG数
-    activation_bugs = statisticsDta(my_datas,today)
-
-    # 画图表
-    list = ["2020-11-23", today]
-    dict = {"2020-11-23":69, today:activation_bugs}
-    draw(list, dict)
+    # # 初始化开发测试人员
+    # # developer = ['褚亚良', '张夏泉', '李星', '沈滔', '尹君', '黄晨', '袁章珂', '温鑫', '边家家', '龙庆玉', '龚树理', '徐益森', '曾俊', '李雄', '王佳乐', '秦真',
+    # #              '饶滔', '吴吉', '罗沙', '毛志敏', '谭啸', '贺尹红', '陈金强']
+    # developer = ["马颖嘉", "蔡义逢", "赵涛涛", "龚树理", "张琦", "李坚", "荆斌", "池宇", "王盼"]
+    # # tester = ['袁妙妙', '贾真', '潘静', '苏林子', '伍洋', '朱双平', '罗闪', '黄超', '王庆宁', '冷梅']
+    # tester = ["王庆宁", "袁妙妙", "贾真", "潘静", "黄超", "苏林子"]
+    #
+    # # 统计开发/测试详细数据
+    # statisticsData(my_datas,developer,tester,today)
+    #
+    # # 统计总数居 -> 返回当日激活BUG数
+    # activation_bugs = statisticsDta(my_datas,today)
+    #
+    # # 画图表
+    # list = ["2020-11-23", today]
+    # dict = {"2020-11-23":69, today:activation_bugs}
+    # draw(list, dict)
 
 
 
