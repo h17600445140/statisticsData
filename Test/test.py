@@ -198,7 +198,7 @@ def draw(list, dict):
 
 
 if __name__ == '__main__':
-    # today = strftime("%Y-%m-%d", localtime(time()))
+    today = strftime("%Y-%m-%d", localtime(time()))
     #
     # # 获取数据文件
     my_datas = getDatas('data.csv')

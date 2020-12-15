@@ -1,0 +1,123 @@
+import math
+import matplotlib.pyplot as plt
+import numpy as np
+from selenium import webdriver
+from fake_useragent import UserAgent
+from selenium.webdriver.chrome.options import Options
+from time import localtime, strftime, time
+from Tapd.crawlingData import crawlingData
+from Tapd.utils import getdateNum
+
+
+chrome_options = Options()
+chrome_options.add_argument('--headless')
+chrome_options.add_argument('User-Agent={}'.format(UserAgent().chrome))
+driver = webdriver.Chrome(options=chrome_options)
+
+my_datas = crawlingData(driver)
+today = strftime("%Y-%m-%d", localtime(time()))
+
+def draw_chart(dict, label_name, y_name, title, path):
+    # 解决plt画图中文不能显示的问题
+    plt.rcParams['font.sans-serif']=['SimHei']
+    plt.rcParams['axes.unicode_minus'] = False
+
+    # 数据初始化
+    labels = []
+    bugs_data = []
+    for key,value in dict.items():
+        labels.append(key)
+        bugs_data.append(value)
+
+    x = np.arange(len(labels))  # the label locations
+
+    # 动态修改y
+    num = max([num for num in dict.values()])
+    num = math.ceil(num/10)*10+20
+    if num>100:
+        y = np.arange(0, num+10, 20)
+    else:
+        y = np.arange(0, num, 10)
+
+    # fig：
+    # ax：图表内容对象
+    fig, ax = plt.subplots()
+
+    # width：柱状图的宽度
+    bar_width = 0.5
+    # 画柱状图
+    Bar_chart = ax.bar(x, bugs_data, bar_width, label=label_name, color='#87CEFA',zorder=5)
+
+     # 增加标签（x,y,title）
+    ax.set_yticks(y)
+    ax.set_ylabel(y_name)      # bug_data
+    ax.set_title(title)        # "每日新增bug数"
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+    ax.legend()
+
+    # 为柱状图添加数据标签
+    def autolabel(rects):
+        for rect in rects:
+            height = rect.get_height()
+            ax.annotate('{}'.format(height),
+                        xy=(rect.get_x() + rect.get_width() / 2, height),
+                        xytext=(0, 3),  # 3 点垂直偏移指数
+                        textcoords="offset points",
+                        ha='center', va='bottom')
+
+    autolabel(Bar_chart)
+    fig.tight_layout()
+    plt.grid(axis='y')
+
+    if len(x) > 6:
+        plt.xticks(rotation=315)
+
+    # 保存图片
+    plt.savefig(path)
+    plt.show()
+
+
+def draw(list, dict, my_datas):
+    # 每日新增BUG数
+    dict1 = {i:getdateNum(my_datas, {"创建时间": i}) for i in list}
+    draw_chart(dict1, 'bugs', 'bug_datas', '每日新增bug数', './png/每日新增bug数.jpg')
+
+    # 每日待修复BUG数
+    draw_chart(dict, 'bugs', 'bug_datas', '每日待修复BUG数', './png/每日待修复BUG数.jpg')
+
+    # 每日已解决BUG数
+    dict3 = {i: getdateNum(my_datas, {"解决时间": i}) for i in list}
+    draw_chart(dict3, 'bugs', 'bug_datas', '每日解决bug数', './png/每日解决bug数.jpg')
+
+    # 每日关闭BUG数
+    dict4 = {i: getdateNum(my_datas, {"关闭时间": i}) for i in list}
+    draw_chart(dict4, 'bugs', 'bug_datas', '每日关闭bug数', './png/每日关闭bug数.jpg')
+
+
+def statisticsDta(my_datas,today) -> int:
+    print("每日新增BUG数：{}".format(getdateNum(my_datas, {"创建时间": today})))
+    print("每日待修复BUG数：{}".format(getdateNum(my_datas, {"状态": '新'})))
+    activation_bugs = getdateNum(my_datas, {"状态": '新'})
+    print("每日已解决BUG数：{}".format(getdateNum(my_datas, {"解决时间": today})))
+    print("每日关闭BUG数：{}".format(getdateNum(my_datas, {"关闭时间": today})))
+    return activation_bugs
+
+if __name__ == '__main__':
+
+    # 统计总数居 -> 返回当日激活BUG数
+    activation_bugs = statisticsDta(my_datas,today)
+
+    list = ["2020-12-14", today]
+    dict = {"2020-12-14":69, today:activation_bugs}
+    draw(list, dict, my_datas)
+
+
+# today = strftime("%Y-%m-%d", localtime(time()))
+# dict = [{"创建人":creator_name, "创建时间":today} for creator_name in creator_names]
+# print(dict)
+#
+#
+# for x in dict:
+#     num = getdateNum(data_list,x)
+#     print(x["创建人"]," 今日提交BUG数为"," :{}".format(num))
