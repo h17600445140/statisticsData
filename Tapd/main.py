@@ -189,6 +189,8 @@ if __name__ == '__main__':
     sendPNGMessage(todayAddBug)
     sendPNGMessage(todaySolvedBug)
 
+    driver.quit()
+
 
 
 
