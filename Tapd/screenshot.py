@@ -4,14 +4,14 @@ from PIL import Image
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-def createPng(path):
+def createPng(html_path, screenshot_path, png_path):
     chrome_options = Options()
     chrome_options.add_argument('--headless')
     driver = webdriver.Chrome(options=chrome_options)
     driver.maximize_window()
-    realPath = "file://" + path
+    realPath = "file://" + html_path
     driver.get(realPath)
-    driver.save_screenshot("./png/test.png")
+    driver.save_screenshot(screenshot_path)
 
     # 获取验证码图片位置
     ce = driver.find_element_by_xpath('/html/body/table')
@@ -24,12 +24,14 @@ def createPng(path):
     dpr = driver.execute_script('return window.devicePixelRatio')
 
     # 抠图
-    im = Image.open('./png/test.png')
+    im = Image.open(screenshot_path)
     img = im.crop((left * dpr, top * dpr, right * dpr, height * dpr))
 
     # 保存
-    img.save('./png/tester.png')
+    img.save(png_path)
 
 if __name__ == '__main__':
-    path = os.path.realpath("html/testerHtml.html")
-    createPng(path)
+    html_path = os.path.realpath("html/testerHtml.html")
+    screenshot_path = "./png/test.png"
+    png_path = './png/tester.png'
+    createPng(html_path, screenshot_path, png_path)
