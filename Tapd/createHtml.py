@@ -56,11 +56,11 @@ def createHtml(title, data, tester_html):
     })
 
     # 遍历数据行，对应数据为负，标红背景颜色
-    for row in table.iter_data_rows():
-        if row[2].value < 0:
-            row.set_style({
-                'background-color': '#ffdddd',
-            })
+    # for row in table.iter_data_rows():
+    #     if row[2].value < 0:
+    #         row.set_style({
+    #             'background-color': '#ffdddd',
+    #         })
 
     html = table.to_html()
 
@@ -71,11 +71,12 @@ def createHtml(title, data, tester_html):
         template_wfile.write(html)
 
 if __name__ == '__main__':
-    Title = (('测试人员','今日提交BUG数','待验证BUG数'),)
-    data = (
-        ('黄超', 110, 20),
-        ('肖城', 20, 20),
-        ('杨兴', 50, -20),
-    )
+    Title = (('测试人员','今日提交BUG数','待验证BUG数','今日关闭BUG数'),)
+    data = [
+        ['黄超', 110, "0", 10],
+        ['肖城', 20, "0", 10],
+        ['杨兴', 50, "0", 10]
+    ]
     tester_html = 'testerHtml.html'
     createHtml(Title, data, tester_html)
+

@@ -1,4 +1,7 @@
+#-*-coding:utf-8-*-
 import math
+import os
+
 import matplotlib.pyplot as plt
 import numpy as np
 from selenium import webdriver
@@ -6,6 +9,9 @@ from fake_useragent import UserAgent
 from selenium.webdriver.chrome.options import Options
 from time import localtime, strftime, time
 from Tapd.crawlingData import crawlingData
+from Tapd.createHtml import createHtml
+from Tapd.screenshot import createPng
+from Tapd.sendMessage import sendPNGMessage
 from Tapd.utils import getdateNum
 
 
@@ -15,7 +21,7 @@ chrome_options.add_argument('User-Agent={}'.format(UserAgent().chrome))
 driver = webdriver.Chrome(options=chrome_options)
 
 my_datas = crawlingData(driver)
-today = strftime("%Y-%m-%d", localtime(time()))
+# print(my_datas)
 
 def draw_chart(dict, label_name, y_name, title, path):
     # 解决plt画图中文不能显示的问题
@@ -81,43 +87,109 @@ def draw_chart(dict, label_name, y_name, title, path):
 def draw(list, dict, my_datas):
     # 每日新增BUG数
     dict1 = {i:getdateNum(my_datas, {"创建时间": i}) for i in list}
-    draw_chart(dict1, 'bugs', 'bug_datas', '每日新增bug数', './png/每日新增bug数.jpg')
+    draw_chart(dict1, 'bugs', 'bug_datas', '每日新增bug数', './png/每日新增bug数.png')
 
     # 每日待修复BUG数
-    draw_chart(dict, 'bugs', 'bug_datas', '每日待修复BUG数', './png/每日待修复BUG数.jpg')
+    draw_chart(dict, 'bugs', 'bug_datas', '每日待修复BUG数', './png/每日待修复BUG数.png')
 
     # 每日已解决BUG数
     dict3 = {i: getdateNum(my_datas, {"解决时间": i}) for i in list}
-    draw_chart(dict3, 'bugs', 'bug_datas', '每日解决bug数', './png/每日解决bug数.jpg')
+    draw_chart(dict3, 'bugs', 'bug_datas', '每日解决bug数', './png/每日解决bug数.png')
 
     # 每日关闭BUG数
     dict4 = {i: getdateNum(my_datas, {"关闭时间": i}) for i in list}
-    draw_chart(dict4, 'bugs', 'bug_datas', '每日关闭bug数', './png/每日关闭bug数.jpg')
+    draw_chart(dict4, 'bugs', 'bug_datas', '每日关闭bug数', './png/每日关闭bug数.png')
 
 
-def statisticsDta(my_datas,today) -> int:
-    print("每日新增BUG数：{}".format(getdateNum(my_datas, {"创建时间": today})))
-    print("每日待修复BUG数：{}".format(getdateNum(my_datas, {"状态": '新'})))
-    activation_bugs = getdateNum(my_datas, {"状态": '新'})
-    print("每日已解决BUG数：{}".format(getdateNum(my_datas, {"解决时间": today})))
-    print("每日关闭BUG数：{}".format(getdateNum(my_datas, {"关闭时间": today})))
+def statisticsDta(my_datas,today,version) -> int:
+    print("每日新增BUG数：{}".format(getdateNum(my_datas, {"创建时间": today, '发现版本': version})))
+    print("每日待修复BUG数：{}".format(getdateNum(my_datas, {"状态": '新', '发现版本': version})))
+    activation_bugs = getdateNum(my_datas, {"状态": '新', '发现版本': version})
+    print("每日已解决BUG数：{}".format(getdateNum(my_datas, {"解决时间": today, '发现版本': version})))
+    print("每日关闭BUG数：{}".format(getdateNum(my_datas, {"关闭时间": today, '发现版本': version})))
     return activation_bugs
 
+
+def testerData(my_datas, person, today, version):
+    testerListData = []
+    submit_bugs = getdateNum(my_datas, {"创建时间": today, '创建人': person, '发现版本': version})
+    verified_bugs = getdateNum(my_datas, {"状态": "已解决", '处理人': person, '发现版本': version})
+    close_bugs = getdateNum(my_datas, {"关闭时间": today, '创建人': person, '发现版本': version})
+    testerListData.append(person)
+    testerListData.append(str(submit_bugs))
+    testerListData.append(str(verified_bugs))
+    testerListData.append(str(close_bugs))
+    return testerListData
+
+def developerData(my_datas, person, today, version):
+    developerListData = []
+    solved_bugs = getdateNum(my_datas, {"解决时间": today, '修复人': person, "状态": "已解决", '发现版本': version})
+    surplus_bugs = getdateNum(my_datas, {"状态": "新", '处理人': person, '发现版本': version})
+
+    developerListData.append(person)
+    developerListData.append(str(solved_bugs))
+    developerListData.append(str(surplus_bugs))
+    return developerListData
+
+
 if __name__ == '__main__':
-
+    today = strftime("%Y-%m-%d", localtime(time()))
+    version = '2.1.6'
     # 统计总数居 -> 返回当日激活BUG数
-    activation_bugs = statisticsDta(my_datas,today)
+    activation_bugs = statisticsDta(my_datas,today,version)
 
-    list = ["2020-12-14", today]
-    dict = {"2020-12-14":69, today:activation_bugs}
+    # --- 脚本修改的地方 ---
+    # list = ["2020-12-15", today]
+    list = [today]
+    # dict = {"2020-12-15":7, today:activation_bugs}
+    dict = {today:activation_bugs}
+
+
     draw(list, dict, my_datas)
 
+    developer = ["吴吉", "李星", "孙运", "龙庆玉", "袁章珂", "沈滔", "潘清", "陈梦晗"]
+    tester = ["伍洋", "杨玲", "黄超"]
 
-# today = strftime("%Y-%m-%d", localtime(time()))
-# dict = [{"创建人":creator_name, "创建时间":today} for creator_name in creator_names]
-# print(dict)
-#
-#
-# for x in dict:
-#     num = getdateNum(data_list,x)
-#     print(x["创建人"]," 今日提交BUG数为"," :{}".format(num))
+    # 测试
+    testerTotalData = []
+    for person in tester:
+        testerTotalData.append(testerData(my_datas, person, today, version))
+
+    Title = (('测试人员', '今日提交BUG数', '待验证BUG数', '今日关闭BUG数'),)
+    tester_html = 'testerHtml.html'
+    createHtml(Title, testerTotalData, tester_html)
+
+    html_path = os.path.realpath("html/testerHtml.html")
+    screenshot_path = "./png/test.png"
+    testerPNG_path = './png/tester.png'
+    createPng(driver, html_path, screenshot_path, testerPNG_path)
+
+    # 开发
+    developerTotalData = []
+    for person in developer:
+        developerTotalData.append(developerData(my_datas, person, today, version))
+
+    Title = (('开发人员', '今日解决BUG数', '待解决BUG数'),)
+    developer_html = 'developerHtml.html'
+    createHtml(Title, developerTotalData, developer_html)
+
+    html_path = os.path.realpath("html/developerHtml.html")
+    screenshot_path = "./png/develop.png"
+    developPNG_path = './png/developer.png'
+    createPng(driver, html_path, screenshot_path, developPNG_path)
+
+    todayCloseBug = './png/每日关闭bug数.png'
+    todayFixedBug = './png/每日待修复BUG数.png'
+    todayAddBug = './png/每日新增bug数.png'
+    todaySolvedBug = './png/每日解决bug数.png'
+    sendPNGMessage(testerPNG_path)
+    sendPNGMessage(developPNG_path)
+    sendPNGMessage(todayCloseBug)
+    sendPNGMessage(todayFixedBug)
+    sendPNGMessage(todayAddBug)
+    sendPNGMessage(todaySolvedBug)
+
+
+
+
+

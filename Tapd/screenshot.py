@@ -1,13 +1,9 @@
 import os
 
 from PIL import Image
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 
-def createPng(html_path, screenshot_path, png_path):
-    chrome_options = Options()
-    chrome_options.add_argument('--headless')
-    driver = webdriver.Chrome(options=chrome_options)
+
+def createPng(driver, html_path, screenshot_path, png_path):
     driver.maximize_window()
     realPath = "file://" + html_path
     driver.get(realPath)
