@@ -8,8 +8,8 @@ def sendPNGMessage(png_path):
         "User-Agent": UserAgent().chrome,
         "Content-Type": "application/json"
     }
-    url = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=f24732df-c9fc-4719-9860-e52a67adcfa4"
-    # url = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=77a5ea6c-fbd2-43c3-b053-3fc0f026514b"
+    # url = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=f24732df-c9fc-4719-9860-e52a67adcfa4"
+    url = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=77a5ea6c-fbd2-43c3-b053-3fc0f026514b"
 
     # params = {
     #     "msgtype": "text",

@@ -84,20 +84,20 @@ def draw_chart(dict, label_name, y_name, title, path):
     plt.show()
 
 
-def draw(list, dict, my_datas):
+def draw(list, dict, my_datas, version):
     # 每日新增BUG数
-    dict1 = {i:getdateNum(my_datas, {"创建时间": i}) for i in list}
+    dict1 = {i:getdateNum(my_datas, {"创建时间": i, '发现版本': version}) for i in list}
     draw_chart(dict1, 'bugs', 'bug_datas', '每日新增bug数', './png/每日新增bug数.png')
 
     # 每日待修复BUG数
     draw_chart(dict, 'bugs', 'bug_datas', '每日待修复BUG数', './png/每日待修复BUG数.png')
 
     # 每日已解决BUG数
-    dict3 = {i: getdateNum(my_datas, {"解决时间": i}) for i in list}
+    dict3 = {i: getdateNum(my_datas, {"解决时间": i, '发现版本': version}) for i in list}
     draw_chart(dict3, 'bugs', 'bug_datas', '每日解决bug数', './png/每日解决bug数.png')
 
     # 每日关闭BUG数
-    dict4 = {i: getdateNum(my_datas, {"关闭时间": i}) for i in list}
+    dict4 = {i: getdateNum(my_datas, {"关闭时间": i, '发现版本': version}) for i in list}
     draw_chart(dict4, 'bugs', 'bug_datas', '每日关闭bug数', './png/每日关闭bug数.png')
 
 
@@ -139,15 +139,15 @@ if __name__ == '__main__':
     activation_bugs = statisticsDta(my_datas,today,version)
 
     # --- 脚本修改的地方 ---
-    # list = ["2020-12-15", today]
-    list = [today]
-    # dict = {"2020-12-15":7, today:activation_bugs}
-    dict = {today:activation_bugs}
+    list = ["2020-12-15", today]
+    # list = [today]
+    dict = {"2020-12-15":7, today:activation_bugs}
+    # dict = {today:activation_bugs}
 
 
-    draw(list, dict, my_datas)
+    draw(list, dict, my_datas, version)
 
-    developer = ["吴吉", "李星", "孙运", "龙庆玉", "袁章珂", "沈滔", "潘清", "陈梦晗"]
+    developer = ["吴吉", "李星", "孙运", "龙庆玉", "袁章珂", "沈滔", "潘清", "陈梦晗", "曾俊", "尹君"]
     tester = ["伍洋", "杨玲", "黄超"]
 
     # 测试
