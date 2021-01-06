@@ -1,4 +1,4 @@
-
+# -*- coding:utf-8 -*-
 def getdateNum(my_datas, dict) -> int:
     dict_len = len(dict)
     key = [key for key in dict.keys()]

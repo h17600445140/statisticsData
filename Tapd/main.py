@@ -1,4 +1,5 @@
 #-*-coding:utf-8-*-
+import json
 import math
 import os
 
@@ -20,8 +21,6 @@ chrome_options.add_argument('--headless')
 chrome_options.add_argument('User-Agent={}'.format(UserAgent().chrome))
 driver = webdriver.Chrome(options=chrome_options)
 
-my_datas = crawlingData(driver)
-# print(my_datas)
 
 def draw_chart(dict, label_name, y_name, title, path):
     # 解决plt画图中文不能显示的问题
@@ -33,12 +32,12 @@ def draw_chart(dict, label_name, y_name, title, path):
     bugs_data = []
     for key,value in dict.items():
         labels.append(key)
-        bugs_data.append(value)
+        bugs_data.append(int(value))
 
     x = np.arange(len(labels))  # the label locations
 
     # 动态修改y
-    num = max([num for num in dict.values()])
+    num = max([int(num) for num in dict.values()])
     num = math.ceil(num/10)*10+20
     if num>100:
         y = np.arange(0, num+10, 20)
@@ -103,10 +102,12 @@ def draw(list, dict, my_datas, version):
 
 def statisticsDta(my_datas,today,version) -> int:
     print("每日新增BUG数：{}".format(getdateNum(my_datas, {"创建时间": today, '发现版本': version})))
-    print("每日待修复BUG数：{}".format(getdateNum(my_datas, {"状态": '新', '发现版本': version})))
-    activation_bugs = getdateNum(my_datas, {"状态": '新', '发现版本': version})
-    print("每日已解决BUG数：{}".format(getdateNum(my_datas, {"解决时间": today, '发现版本': version})))
+    print("每日解决BUG数：{}".format(getdateNum(my_datas, {"解决时间": today, '发现版本': version})))
     print("每日关闭BUG数：{}".format(getdateNum(my_datas, {"关闭时间": today, '发现版本': version})))
+    resolvedBUG = getdateNum(my_datas, {"状态": '新', '发现版本': version}) + getdateNum(my_datas, {"状态": '接受/处理', '发现版本': version})
+    print("每日待修复BUG数：{}".format(resolvedBUG))
+    activation_bugs = resolvedBUG
+
     return activation_bugs
 
 
@@ -134,21 +135,33 @@ def developerData(my_datas, person, today, version):
 
 if __name__ == '__main__':
     today = strftime("%Y-%m-%d", localtime(time()))
-    version = '2.1.6'
+    version = '2.1.7'
+
+    my_datas = crawlingData(driver,version)
+
     # 统计总数居 -> 返回当日激活BUG数
     activation_bugs = statisticsDta(my_datas,today,version)
 
-    # --- 脚本修改的地方 ---
-    list = ["2020-12-15", today]
-    # list = [today]
-    dict = {"2020-12-15":7, today:activation_bugs}
-    # dict = {today:activation_bugs}
+    # 读取记录文件
+    with open("record.json", "r", encoding="UTF-8") as f:
+        Rdata = json.load(f)
+    Rdata["data"].update({today : str(activation_bugs)})
 
+    data = Rdata
+
+    # 写入记录文件
+    with open("record.json", "w", encoding="UTF-8") as f:
+        json.dump(data, f)
+
+    list = [key for key in data["data"].keys()]
+    # activation_bugs
+    dict = data["data"]
 
     draw(list, dict, my_datas, version)
 
-    developer = ["吴吉", "李星", "孙运", "龙庆玉", "袁章珂", "沈滔", "潘清", "陈梦晗", "曾俊", "尹君"]
-    tester = ["伍洋", "杨玲", "黄超"]
+    # 脚本初始化
+    developer = ["沈滔", "吴吉", "孙运", "李星", "李雄", "张科君", "尹君"]
+    tester = ["伍洋", "苏林子", "刘巧利"]
 
     # 测试
     testerTotalData = []
@@ -182,6 +195,7 @@ if __name__ == '__main__':
     todayFixedBug = './png/每日待修复BUG数.png'
     todayAddBug = './png/每日新增bug数.png'
     todaySolvedBug = './png/每日解决bug数.png'
+
     sendPNGMessage(testerPNG_path)
     sendPNGMessage(developPNG_path)
     sendPNGMessage(todayCloseBug)

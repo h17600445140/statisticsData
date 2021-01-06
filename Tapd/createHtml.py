@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from HTMLTable import HTMLTable
 
 def createHtml(title, data, tester_html):

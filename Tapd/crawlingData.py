@@ -1,5 +1,6 @@
+# -*- coding:utf-8 -*-
 
-def crawlingData(driver):
+def crawlingData(driver,version):
     driver.get("https://www.tapd.cn/cloud_logins/login")
     driver.maximize_window()
 
@@ -7,7 +8,8 @@ def crawlingData(driver):
     driver.find_element_by_id("password_input").send_keys("Hc17600445140")
     driver.find_element_by_xpath('//*[@id="tcloud_login_button"]').click()
 
-    driver.get("https://www.tapd.cn/67410840/bugtrace/bugreports/my_view")
+    url = "https://www.tapd.cn/67410840/bugtrace/bugreports/my_view?" + "data[Filter][version_report][]=" + version
+    driver.get(url)
 
     data_list = []
 
