@@ -120,17 +120,17 @@ def testerData(my_datas, person, today, version):
     testerListData.append(str(submit_bugs))
     testerListData.append(str(verified_bugs))
     testerListData.append(str(close_bugs))
-    return testerListData
+    return testerListData,submit_bugs,verified_bugs,close_bugs
 
 def developerData(my_datas, person, today, version):
     developerListData = []
     solved_bugs = getdateNum(my_datas, {"解决时间": today, '修复人': person, "状态": "已解决", '发现版本': version})
-    surplus_bugs = getdateNum(my_datas, {"状态": "新", '处理人': person, '发现版本': version})
+    surplus_bugs = getdateNum(my_datas, {"状态": "新", '处理人': person, '发现版本': version}) + getdateNum(my_datas, {"状态": "接受/处理", '处理人': person, '发现版本': version})
 
     developerListData.append(person)
     developerListData.append(str(solved_bugs))
     developerListData.append(str(surplus_bugs))
-    return developerListData
+    return developerListData, solved_bugs, surplus_bugs
 
 
 if __name__ == '__main__':
@@ -160,13 +160,21 @@ if __name__ == '__main__':
     draw(list, dict, my_datas, version)
 
     # 脚本初始化
-    developer = ["沈滔", "吴吉", "孙运", "李星", "李雄", "张科君", "尹君"]
-    tester = ["伍洋", "苏林子", "刘巧利"]
+    developer = ["沈滔", "吴吉", "孙运", "李星", "李雄", "张科君", "尹君", "曾俊"]
+    tester = ["伍洋", "苏林子", "刘巧利", "文玉婷", "唐洁TangJie01"]
 
+    testerTotalSubmit_bugs = 0
+    testerTotalverified_bugs = 0
+    testerTotalclose_bugs = 0
     # 测试
     testerTotalData = []
     for person in tester:
-        testerTotalData.append(testerData(my_datas, person, today, version))
+        testerListData,submit_bugs,verified_bugs,close_bugs = testerData(my_datas, person, today, version)
+        testerTotalSubmit_bugs = testerTotalSubmit_bugs + submit_bugs
+        testerTotalverified_bugs = testerTotalverified_bugs + verified_bugs
+        testerTotalclose_bugs = testerTotalclose_bugs + close_bugs
+        testerTotalData.append(testerListData)
+    testerTotalData.append(["总计",str(testerTotalSubmit_bugs),str(testerTotalverified_bugs),str(testerTotalclose_bugs)])
 
     Title = (('测试人员', '今日提交BUG数', '待验证BUG数', '今日关闭BUG数'),)
     tester_html = 'testerHtml.html'
@@ -177,10 +185,16 @@ if __name__ == '__main__':
     testerPNG_path = './png/tester.png'
     createPng(driver, html_path, screenshot_path, testerPNG_path)
 
+    developerTotalSolved_bugs = 0
+    developerTotalSurplus_bugs = 0
     # 开发
     developerTotalData = []
     for person in developer:
-        developerTotalData.append(developerData(my_datas, person, today, version))
+        developerListData, solved_bugs, surplus_bugs = developerData(my_datas, person, today, version)
+        developerTotalSolved_bugs = developerTotalSolved_bugs + solved_bugs
+        developerTotalSurplus_bugs = developerTotalSurplus_bugs + surplus_bugs
+        developerTotalData.append(developerListData)
+    developerTotalData.append(["总计", str(developerTotalSolved_bugs), str(developerTotalSurplus_bugs)])
 
     Title = (('开发人员', '今日解决BUG数', '待解决BUG数'),)
     developer_html = 'developerHtml.html'
