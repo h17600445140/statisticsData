@@ -104,7 +104,7 @@ def statisticsDta(my_datas,today,version) -> int:
     print("每日新增BUG数：{}".format(getdateNum(my_datas, {"创建时间": today, '发现版本': version})))
     print("每日解决BUG数：{}".format(getdateNum(my_datas, {"解决时间": today, '发现版本': version})))
     print("每日关闭BUG数：{}".format(getdateNum(my_datas, {"关闭时间": today, '发现版本': version})))
-    resolvedBUG = getdateNum(my_datas, {"状态": '新', '发现版本': version}) + getdateNum(my_datas, {"状态": '接受/处理', '发现版本': version})
+    resolvedBUG = getdateNum(my_datas, {"状态": '新', '发现版本': version}) + getdateNum(my_datas, {"状态": '接受/处理', '发现版本': version}) + getdateNum(my_datas, {"状态": '重新打开', '发现版本': version})
     print("每日待修复BUG数：{}".format(resolvedBUG))
     activation_bugs = resolvedBUG
 
@@ -125,7 +125,7 @@ def testerData(my_datas, person, today, version):
 def developerData(my_datas, person, today, version):
     developerListData = []
     solved_bugs = getdateNum(my_datas, {"解决时间": today, '修复人': person, "状态": "已解决", '发现版本': version})
-    surplus_bugs = getdateNum(my_datas, {"状态": "新", '处理人': person, '发现版本': version}) + getdateNum(my_datas, {"状态": "接受/处理", '处理人': person, '发现版本': version})
+    surplus_bugs = getdateNum(my_datas, {"状态": "新", '处理人': person, '发现版本': version}) + getdateNum(my_datas, {"状态": "接受/处理", '处理人': person, '发现版本': version}) + getdateNum(my_datas, {"状态": "重新打开", '处理人': person, '发现版本': version})
 
     developerListData.append(person)
     developerListData.append(str(solved_bugs))
@@ -134,10 +134,19 @@ def developerData(my_datas, person, today, version):
 
 
 if __name__ == '__main__':
-    today = strftime("%Y-%m-%d", localtime(time()))
+    # 脚本初始化(注意：首次执行需要清空record.json文件)
     version = '2.1.7'
+    username = '17600445140'
+    password = 'Hc17600445140'
+    # roboturl = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=a7d6ff37-bcf2-49d0-9f2c-dee68ec82e05'
+    roboturl = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=9607d7b2-6c72-4e73-ae7a-e27c0990b467'
+    developer = ["沈滔", "吴吉", "孙运", "李星", "李雄", "张科君", "尹君", "曾俊"]
+    tester = ["伍洋", "苏林子", "刘巧利", "文玉婷", "唐洁TangJie01"]
 
-    my_datas = crawlingData(driver,version)
+
+    today = strftime("%Y-%m-%d", localtime(time()))
+
+    my_datas = crawlingData(driver,version,username,password)
 
     # 统计总数居 -> 返回当日激活BUG数
     activation_bugs = statisticsDta(my_datas,today,version)
@@ -158,10 +167,6 @@ if __name__ == '__main__':
     dict = data["data"]
 
     draw(list, dict, my_datas, version)
-
-    # 脚本初始化
-    developer = ["沈滔", "吴吉", "孙运", "李星", "李雄", "张科君", "尹君", "曾俊"]
-    tester = ["伍洋", "苏林子", "刘巧利", "文玉婷", "唐洁TangJie01"]
 
     testerTotalSubmit_bugs = 0
     testerTotalverified_bugs = 0
@@ -210,12 +215,12 @@ if __name__ == '__main__':
     todayAddBug = './png/每日新增bug数.png'
     todaySolvedBug = './png/每日解决bug数.png'
 
-    sendPNGMessage(testerPNG_path)
-    sendPNGMessage(developPNG_path)
-    sendPNGMessage(todayCloseBug)
-    sendPNGMessage(todayFixedBug)
-    sendPNGMessage(todayAddBug)
-    sendPNGMessage(todaySolvedBug)
+    sendPNGMessage(testerPNG_path,roboturl)
+    sendPNGMessage(developPNG_path,roboturl)
+    sendPNGMessage(todayCloseBug,roboturl)
+    sendPNGMessage(todayFixedBug,roboturl)
+    sendPNGMessage(todayAddBug,roboturl)
+    sendPNGMessage(todaySolvedBug,roboturl)
 
     driver.quit()
 

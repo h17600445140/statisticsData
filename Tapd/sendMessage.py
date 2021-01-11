@@ -4,13 +4,13 @@ import hashlib
 import requests
 from fake_useragent import UserAgent
 
-def sendPNGMessage(png_path):
+def sendPNGMessage(png_path, roboturl):
     headers = {
         "User-Agent": UserAgent().chrome,
         "Content-Type": "application/json"
     }
 
-    url = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=a7d6ff37-bcf2-49d0-9f2c-dee68ec82e05"
+    url = roboturl
 
     # params = {
     #     "msgtype": "text",

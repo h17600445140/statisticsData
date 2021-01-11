@@ -1,11 +1,11 @@
 # -*- coding:utf-8 -*-
 
-def crawlingData(driver,version):
+def crawlingData(driver,version,username,password):
     driver.get("https://www.tapd.cn/cloud_logins/login")
     driver.maximize_window()
 
-    driver.find_element_by_id("username").send_keys("17600445140")
-    driver.find_element_by_id("password_input").send_keys("Hc17600445140")
+    driver.find_element_by_id("username").send_keys(username)
+    driver.find_element_by_id("password_input").send_keys(password)
     driver.find_element_by_xpath('//*[@id="tcloud_login_button"]').click()
 
     url = "https://www.tapd.cn/67410840/bugtrace/bugreports/my_view?" + "data[Filter][version_report][]=" + version
