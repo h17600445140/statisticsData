@@ -79,7 +79,7 @@ def draw_chart(dict, label_name, y_name, title, path):
         plt.xticks(rotation=315)
 
     # 保存图片
-    plt.savefig(path)
+    plt.savefig(path, bbox_inches='tight')
     plt.show()
 
 
