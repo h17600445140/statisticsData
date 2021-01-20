@@ -124,7 +124,7 @@ def testerData(my_datas, person, today, version):
 
 def developerData(my_datas, person, today, version):
     developerListData = []
-    solved_bugs = getdateNum(my_datas, {"解决时间": today, '修复人': person, "状态": "已解决", '发现版本': version})
+    solved_bugs = getdateNum(my_datas, {"解决时间": today, '修复人': person, '发现版本': version})
     surplus_bugs = getdateNum(my_datas, {"状态": "新", '处理人': person, '发现版本': version}) + getdateNum(my_datas, {"状态": "接受/处理", '处理人': person, '发现版本': version}) + getdateNum(my_datas, {"状态": "重新打开", '处理人': person, '发现版本': version})
     developer_todayBugs = getdateNum(my_datas, {"创建时间": today, "状态": "新", '处理人': person, '发现版本': version}) \
                           + getdateNum(my_datas, {"创建时间": today, "状态": "接受/处理", '处理人': person, '发现版本': version})  \
