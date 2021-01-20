@@ -145,10 +145,10 @@ if __name__ == '__main__':
     version = '2.1.7'
     username = '17600445140'
     password = 'Hc17600445140'
-    # roboturl = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=a7d6ff37-bcf2-49d0-9f2c-dee68ec82e05'
-    roboturl = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=9607d7b2-6c72-4e73-ae7a-e27c0990b467'
-    developer = ["沈滔", "吴吉", "孙运", "李星", "李雄", "张科君", "尹君", "曾俊"]
-    tester = ["伍洋", "苏林子", "刘巧利", "文玉婷", "唐洁TangJie01"]
+    roboturl = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=a7d6ff37-bcf2-49d0-9f2c-dee68ec82e05'
+    # roboturl = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=9607d7b2-6c72-4e73-ae7a-e27c0990b467'
+    developer = ["沈滔", "吴吉", "孙运", "李星", "张科君", "张夏泉", "龙庆玉", "潘清", "秦真", "黄晨", "尹君"]
+    tester = ["伍洋", "苏林子", "刘巧利", "文玉婷", "刘迎", "唐洁TangJie01"]
 
 
     today = strftime("%Y-%m-%d", localtime(time()))
