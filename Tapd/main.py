@@ -142,13 +142,12 @@ def developerData(my_datas, person, today, version):
 
 if __name__ == '__main__':
     # 脚本初始化(注意：首次执行需要清空record.json文件)
-    version = '2.1.7'
+    version = '数据异常监控'
     username = '17600445140'
     password = 'Hc17600445140'
-    roboturl = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=a7d6ff37-bcf2-49d0-9f2c-dee68ec82e05'
-    # roboturl = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=9607d7b2-6c72-4e73-ae7a-e27c0990b467'
-    developer = ["沈滔", "吴吉", "孙运", "李星", "张科君", "张夏泉", "龙庆玉", "潘清", "秦真", "黄晨", "尹君"]
-    tester = ["伍洋", "苏林子", "刘巧利", "文玉婷", "刘迎", "唐洁TangJie01"]
+    roboturl = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=affadc5d-52dd-4f32-b0b6-eba94ba9b70a'
+    developer = ["罗沙", "饶滔", "曾俊"]
+    tester = ["饶滔"]
 
 
     today = strftime("%Y-%m-%d", localtime(time()))
