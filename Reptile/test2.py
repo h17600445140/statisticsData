@@ -1,3 +1,4 @@
+import json
 from urllib.parse import urlencode
 
 import requests
@@ -59,38 +60,30 @@ class Downloader:
 class Parser:
 
     def parse(self, html, *args, **kwargs):
-        cityList = args[0]
+
+        city = args[0]
+
         e = etree.HTML(html)
-        datas = self.parse_info(e, cityList)
+        datas = self.parse_info(e, city)
         return datas
 
     def parse_info(self, e, *args, **kwargs):
 
-        cityList = args[0].reverse()
+        city = args[0]
 
         contents = e.xpath('/html/body/div[2]/div[2]/div[2]/div/div[1]/ul/text()')
 
-        cityStation = { }
+        cityStation = []
 
-        for i in range(len(args[0])):
-            cityStation.update({args[0][i] : []})
-            # print('---',cityStation)
-            #
-            # for j in range(1, len(contents)):
-            #     station = e.xpath('/html/body/div[2]/div[2]/div[2]/div/div[1]/ul/li[{}]/dl/dt/a[1]/text()'.format(j))
-            #     stationLocal = e.xpath(
-            #         '/html/body/div[2]/div[2]/div[2]/div/div[1]/ul/li[{}]/dl/dt/a[2]/text()'.format(j))
-            #     if len(stationLocal) != 0:
-            #         cityStation[args[0][i]].append(station[0])
+        for i in range(1, len(contents)):
+            station = e.xpath('/html/body/div[2]/div[2]/div[2]/div/div[1]/ul/li[{}]/dl/dt/a[1]/text()'.format(i))
+            stationLocal = e.xpath(
+                '/html/body/div[2]/div[2]/div[2]/div/div[1]/ul/li[{}]/dl/dt/a[2]/text()'.format(i))
+            if len(stationLocal) != 0 and stationLocal[0] == city:
+                cityStation.append(station[0])
 
         return cityStation
 
-
-        # spans = e.xpath('//div[@class="content"]/span[1]')
-        # datas = []
-        # for span in spans:
-        #     datas.append(span.xpath('string(.)'))
-        # return datas
 
     def parse_urls(self, e):
         base_url = 'https://www.qiushibaike.com{}'
@@ -100,16 +93,22 @@ class Parser:
         return urls
 
 
+
 # 数据处理
 class DataOutPut:
-    def save(self, datas):
-        with open('duanzi.txt', 'a', encoding='utf-8') as f:
-            for data in datas:
-                f.write(data)
 
+    def save(self, datas):
+
+        with open('cityStation.json', "r", encoding="UTF-8") as f:
+            Rdata = json.load(f)
+            Rdata.update(datas)
+            data = Rdata
+            with open('cityStation.json', "w", encoding="UTF-8") as f:
+                json.dump(data, f)
 
 # 调度
 class DiaoDu:
+
     def __init__(self):
         self.downloader = Downloader()
         self.url_manager = URLManager()
@@ -131,18 +130,26 @@ class DiaoDu:
             crawlUrls.append(formatUrl)
         self.url_manager.add_new_urls(crawlUrls)
 
+        cityList.reverse()
 
+        count = 0
         while self.url_manager.has_new_url():
             url = self.url_manager.get_new_url()
             html = self.downloader.download(url)
-            data = self.parser.parse(html, cityList)
-            print(data)
-            # self.data_saver.save(data)
-            # self.url_manager.add_new_urls(urls)
+            data = self.parser.parse(html, cityList[count])
+            self.data_saver.save({cityList[count]:data})
+            count += 1
+
+        with open('cityStation.json', "r", encoding="UTF-8") as f:
+            Rdata = json.load(f)
+            print(Rdata)
+
 
 
 if __name__ == '__main__':
-    city = ['广州', '北京', '上海', '长沙']
+    city = ['广州', '北京', '上海', '长沙', '石家庄', '太原', '呼和浩特', '沈阳', '长春', '哈尔滨', '南京', '杭州', '合肥', '福州',
+            '南昌', '济南', '郑州', '武汉', '南宁', '海口', '成都', '贵阳', '昆明', '拉萨', '西安', '兰州', '西宁', '银川',
+            '乌鲁木齐', '遵义']
     baseUrl = 'https://you.ctrip.com/searchsite/Traffic?{}'
     diao_du = DiaoDu()
 
