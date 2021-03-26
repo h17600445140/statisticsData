@@ -1,0 +1,34 @@
+{
+  "Total" : {
+    "transaction" : "Total",
+    "sampleCount" : 424,
+    "errorCount" : 0,
+    "errorPct" : 0.0,
+    "meanResTime" : 23.113207547169775,
+    "medianResTime" : 21.0,
+    "minResTime" : 18.0,
+    "maxResTime" : 95.0,
+    "pct1ResTime" : 27.0,
+    "pct2ResTime" : 27.0,
+    "pct3ResTime" : 39.5,
+    "throughput" : 42.548921224284996,
+    "receivedKBytesPerSec" : 193.1718044405419,
+    "sentKBytesPerSec" : 5.3186151530356245
+  },
+  "BaiDuTest" : {
+    "transaction" : "BaiDuTest",
+    "sampleCount" : 424,
+    "errorCount" : 0,
+    "errorPct" : 0.0,
+    "meanResTime" : 23.113207547169775,
+    "medianResTime" : 21.0,
+    "minResTime" : 18.0,
+    "maxResTime" : 95.0,
+    "pct1ResTime" : 27.0,
+    "pct2ResTime" : 27.0,
+    "pct3ResTime" : 39.5,
+    "throughput" : 42.548921224284996,
+    "receivedKBytesPerSec" : 193.1718044405419,
+    "sentKBytesPerSec" : 5.3186151530356245
+  }
+}
