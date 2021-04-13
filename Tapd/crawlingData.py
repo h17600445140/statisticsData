@@ -8,7 +8,7 @@ def crawlingData(driver,version,username,password):
     driver.find_element_by_id("password_input").send_keys(password)
     driver.find_element_by_xpath('//*[@id="tcloud_login_button"]').click()
 
-    url = "https://www.tapd.cn/67410840/bugtrace/bugreports/my_view?" + "data[Filter][version_report][]=" + version
+    url = "https://www.tapd.cn/67410840/bugtrace/bugreports/my_view?" + 'perpage=100&' + "data[Filter][version_report][]=" + version
     driver.get(url)
 
     data_list = []

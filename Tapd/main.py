@@ -17,6 +17,8 @@ from Tapd.utils import getdateNum
 
 
 chrome_options = Options()
+chrome_options.add_argument('--no-sandbox')
+chrome_options.add_argument('--disable-dev-shm-usage')
 chrome_options.add_argument('--headless')
 chrome_options.add_argument('User-Agent={}'.format(UserAgent().chrome))
 driver = webdriver.Chrome(options=chrome_options)
@@ -75,8 +77,10 @@ def draw_chart(dict, label_name, y_name, title, path):
     fig.tight_layout()
     plt.grid(axis='y')
 
-    if len(x) > 6:
+    if len(x) > 6 and len(x) <= 12:
         plt.xticks(rotation=315)
+    elif len(x) > 12:
+        plt.xticks(rotation=270)
 
     # 保存图片
     plt.savefig(path, bbox_inches='tight')
@@ -142,13 +146,12 @@ def developerData(my_datas, person, today, version):
 
 if __name__ == '__main__':
     # 脚本初始化(注意：首次执行需要清空record.json文件)
-    version = '数据异常监控'
+    version = '配置优化一期版本'
     username = '17600445140'
     password = 'Hc17600445140'
-    roboturl = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=affadc5d-52dd-4f32-b0b6-eba94ba9b70a'
-    developer = ["罗沙", "饶滔", "曾俊"]
-    tester = ["饶滔"]
-
+    roboturl = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=c9a0d468-25e0-4fb6-8cbf-ea1f5f72c158'
+    developer = ["黄晨", "吴吉", "罗沙", "樊彬彬", "张科君", "龙庆玉", "胡凯", "雷杰", "赵铮", "徐稳", "李星", "尹君", "郑琪", "刘迎", "文玉婷", "张莉平"]
+    tester = ["杨玲", "苏林子", "刘娟", "吴玉霞"]
 
     today = strftime("%Y-%m-%d", localtime(time()))
 
@@ -209,7 +212,7 @@ if __name__ == '__main__':
         developerTotalData.append(developerListData)
     developerTotalData.append(["总计", str(developerTotalSolved_bugs), str(developerTotalSurplus_bugs), str(developerTotalDeveloper_todayBugs)])
 
-    Title = (('开发人员', '今日解决BUG数', '待解决BUG数', '今日新增bug数'),)
+    Title = (('开发人员', '今日解决BUG数', '待解决BUG数', '今日新增BUG数'),)
     developer_html = 'developerHtml.html'
     createHtml(Title, developerTotalData, developer_html)
 
