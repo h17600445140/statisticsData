@@ -93,7 +93,7 @@ def draw(list, dict, my_datas, version):
     draw_chart(dict1, 'bugs', 'bug_datas', '每日新增bug数', './png/每日新增bug数.png')
 
     # 每日待修复BUG数
-    draw_chart(dict, 'bugs', 'bug_datas', '每日待修复BUG数', './png/每日待修复BUG数.png')
+    draw_chart(dict, 'bugs', 'bug_datas', '每日待修复bug数', './png/每日待修复bug数.png')
 
     # 每日已解决BUG数
     dict3 = {i: getdateNum(my_datas, {"解决时间": i, '发现版本': version}) for i in list}
@@ -222,7 +222,7 @@ if __name__ == '__main__':
     createPng(driver, html_path, screenshot_path, developPNG_path)
 
     todayCloseBug = './png/每日关闭bug数.png'
-    todayFixedBug = './png/每日待修复BUG数.png'
+    todayFixedBug = './png/每日待修复bug数.png'
     todayAddBug = './png/每日新增bug数.png'
     todaySolvedBug = './png/每日解决bug数.png'
 
