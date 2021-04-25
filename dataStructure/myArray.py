@@ -3,6 +3,7 @@
 # 自定义数据
 
 
+
 class Array:
 
     def __init__(self, capacity: int):

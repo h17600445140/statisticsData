@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 
 
+
 class LinkedListNode(object):
 
     def __init__(self, key, value, pre_node=None, next_node=None):
