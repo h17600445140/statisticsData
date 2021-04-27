@@ -108,7 +108,9 @@ def statisticsDta(my_datas,today,version) -> int:
     print("每日新增BUG数：{}".format(getdateNum(my_datas, {"创建时间": today, '发现版本': version})))
     print("每日解决BUG数：{}".format(getdateNum(my_datas, {"解决时间": today, '发现版本': version})))
     print("每日关闭BUG数：{}".format(getdateNum(my_datas, {"关闭时间": today, '发现版本': version})))
-    resolvedBUG = getdateNum(my_datas, {"状态": '新', '发现版本': version}) + getdateNum(my_datas, {"状态": '接受/处理', '发现版本': version}) + getdateNum(my_datas, {"状态": '重新打开', '发现版本': version})
+    resolvedBUG = getdateNum(my_datas, {"状态": '新', '发现版本': version}) + \
+                  getdateNum(my_datas, {"状态": '接受/处理', '发现版本': version}) + \
+                  getdateNum(my_datas, {"状态": '重新打开', '发现版本': version})
     print("每日待修复BUG数：{}".format(resolvedBUG))
     activation_bugs = resolvedBUG
 
@@ -129,33 +131,49 @@ def testerData(my_datas, person, today, version):
 def developerData(my_datas, person, today, version):
     developerListData = []
     solved_bugs = getdateNum(my_datas, {"解决时间": today, '修复人': person, '发现版本': version})
-    surplus_bugs = getdateNum(my_datas, {"状态": "新", '处理人': person, '发现版本': version}) + getdateNum(my_datas, {"状态": "接受/处理", '处理人': person, '发现版本': version}) + getdateNum(my_datas, {"状态": "重新打开", '处理人': person, '发现版本': version})
+    surplus_bugs = getdateNum(my_datas, {"状态": "新", '处理人': person, '发现版本': version}) + \
+                   getdateNum(my_datas, {"状态": "接受/处理", '处理人': person, '发现版本': version}) + \
+                   getdateNum(my_datas, {"状态": "重新打开", '处理人': person, '发现版本': version})
     developer_todayBugs = getdateNum(my_datas, {"创建时间": today, "状态": "新", '处理人': person, '发现版本': version}) \
                           + getdateNum(my_datas, {"创建时间": today, "状态": "接受/处理", '处理人': person, '发现版本': version})  \
                           + getdateNum(my_datas, {"创建时间": today, "状态": "重新打开", '处理人': person, '发现版本': version}) \
                           + getdateNum(my_datas, {"创建时间": today, "状态": "已解决", '修复人': person, '发现版本': version}) \
                           + getdateNum(my_datas, {"创建时间": today, "状态": "已关闭", '修复人': person, '发现版本': version}) \
                           + getdateNum(my_datas, {"创建时间": today, "状态": "已验证", '修复人': person, '发现版本': version})
+    developer_totalBugs = getdateNum(my_datas, {"状态": "新", '处理人': person, '发现版本': version}) \
+                          + getdateNum(my_datas, {"状态": "重新打开", '处理人': person, '发现版本': version}) \
+                          + getdateNum(my_datas, {"状态": "已解决", '修复人': person, '发现版本': version}) \
+                          + getdateNum(my_datas, {"状态": "已关闭", '修复人': person, '发现版本': version}) \
+                          + getdateNum(my_datas, {"状态": "已验证", '修复人': person, '发现版本': version})
+    developer_totalSolvedBugs = getdateNum(my_datas, {"状态": "已解决", '修复人': person, '发现版本': version}) \
+                          + getdateNum(my_datas, {"状态": "已关闭", '修复人': person, '发现版本': version}) \
+                          + getdateNum(my_datas, {"状态": "已验证", '修复人': person, '发现版本': version})
 
     developerListData.append(person)
     developerListData.append(str(solved_bugs))
     developerListData.append(str(surplus_bugs))
     developerListData.append(str(developer_todayBugs))
-    return developerListData, solved_bugs, surplus_bugs, developer_todayBugs
+    developerListData.append(str(developer_totalBugs))
+    developerListData.append(str(developer_totalSolvedBugs))
 
+    return developerListData, solved_bugs, surplus_bugs, developer_todayBugs, developer_totalBugs, developer_totalSolvedBugs
 
 if __name__ == '__main__':
     # 脚本初始化(注意：首次执行需要清空record.json文件)
+
+    # 发现版本
     version = '数据权限优化版本'
+    # 迭代
+    iteration = 1167410840001000247
     username = '17600445140'
     password = 'Hc17600445140'
     roboturl = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=3897849e-de5a-419a-840f-d32c91e32e08'
-    developer = ["王建安", "李雄"]
+    developer = ["李雄", "王建安", "王瑞臻"]
     tester = ["王琦"]
 
     today = strftime("%Y-%m-%d", localtime(time()))
 
-    my_datas = crawlingData(driver,version,username,password)
+    my_datas = crawlingData(driver,version,iteration,username,password)
 
     # 统计总数居 -> 返回当日激活BUG数
     activation_bugs = statisticsDta(my_datas,today,version)
@@ -202,17 +220,26 @@ if __name__ == '__main__':
     developerTotalSolved_bugs = 0
     developerTotalSurplus_bugs = 0
     developerTotalDeveloper_todayBugs = 0
+    developerTotalDeveloper_totalBugs = 0
+    developerTotalDeveloper_totalSolvedBugs = 0
     # 开发
     developerTotalData = []
     for person in developer:
-        developerListData, solved_bugs, surplus_bugs, developer_todayBugs = developerData(my_datas, person, today, version)
+        developerListData, solved_bugs, surplus_bugs, developer_todayBugs, developer_totalBugs, developer_totalSolvedBugs = developerData(my_datas, person, today, version)
         developerTotalSolved_bugs = developerTotalSolved_bugs + solved_bugs
         developerTotalSurplus_bugs = developerTotalSurplus_bugs + surplus_bugs
         developerTotalDeveloper_todayBugs = developerTotalDeveloper_todayBugs + developer_todayBugs
+        developerTotalDeveloper_totalBugs = developerTotalDeveloper_totalBugs + developer_totalBugs
+        developerTotalDeveloper_totalSolvedBugs = developerTotalDeveloper_totalSolvedBugs + developer_totalSolvedBugs
         developerTotalData.append(developerListData)
-    developerTotalData.append(["总计", str(developerTotalSolved_bugs), str(developerTotalSurplus_bugs), str(developerTotalDeveloper_todayBugs)])
+    developerTotalData.append(["总计",
+                               str(developerTotalSolved_bugs),
+                               str(developerTotalSurplus_bugs),
+                               str(developerTotalDeveloper_todayBugs),
+                               str(developerTotalDeveloper_totalBugs),
+                               str(developerTotalDeveloper_totalSolvedBugs)])
 
-    Title = (('开发人员', '今日解决BUG数', '待解决BUG数', '今日新增BUG数'),)
+    Title = (('开发', '今日解决BUG', '待解决BUG', '今日新增BUG', '累计新增BUG', '累计解决BUG'),)
     developer_html = 'developerHtml.html'
     createHtml(Title, developerTotalData, developer_html)
 
