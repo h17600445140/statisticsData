@@ -162,14 +162,14 @@ if __name__ == '__main__':
     # 脚本初始化(注意：首次执行需要清空record.json文件)
 
     # 发现版本
-    version = '数据权限优化版本'
+    version = '2.1.7.5小版本'
     # 迭代
-    iteration = 1167410840001000247
+    iteration = 1167410840001000282
     username = '17600445140'
     password = 'Hc17600445140'
-    roboturl = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=3897849e-de5a-419a-840f-d32c91e32e08'
-    developer = ["李雄", "王建安", "王瑞臻"]
-    tester = ["王琦"]
+    roboturl = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=516c997e-2afb-4df3-95b6-f08566956c92'
+    developer = ["欧阳承珺", "张夏泉", "张科君", "边家家", "杨宇凡", "董洲", "吴吉", "贺尹红", "文玉婷"]
+    tester = ["苏林子", "刘宗祥", "杨玲", "黄超", "王琦"]
 
     today = strftime("%Y-%m-%d", localtime(time()))
 
