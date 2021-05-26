@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import base64
 
 class Man(object):
 
@@ -18,5 +19,9 @@ class Man(object):
 
 if __name__ == '__main__':
     m = Man()
-    print(m.work)
+    # print(m.work)
     m.work = 2
+
+    print(base64.b64encode("hello".encode('utf-8')))
+
+

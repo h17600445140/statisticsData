@@ -11,19 +11,17 @@ def bubble_sort(list: List[int]):
     listLength = len(list)
 
     if listLength <= 1 :
-        return list
+        return
 
     for i in range(listLength):
         swap = False
         for j in range(listLength-1-i):
-            if a[j] > a[j+1]:
-                temp = a[j]
-                a[j], a[j+1] = a[j+1], temp
+            if list[j] > list[j+1]:
+                temp = list[j]
+                list[j], list[j+1] = list[j+1], temp
                 swap = True
         if not swap:
             break
-
-    return list
 
 
 def insertion_sort(list: List[int]):
@@ -35,7 +33,7 @@ def insertion_sort(list: List[int]):
     listLength = len(list)
 
     if listLength <= 1:
-        return list
+        return
 
     for i in range(1, listLength):
         value = list[i]
@@ -44,8 +42,6 @@ def insertion_sort(list: List[int]):
             list[j+1] = list[j]
             j -= 1
         list[j + 1] = value
-
-    return list
 
 
 def selection_sort(list: List[int]):
@@ -57,7 +53,7 @@ def selection_sort(list: List[int]):
     listLength = len(list)
 
     if listLength <= 1:
-        return list
+        return
 
     for i in range(listLength):
         min_index = i
@@ -71,12 +67,13 @@ def selection_sort(list: List[int]):
         # list[i] = min_value
         list[min_index], list[i] = list[i], list[min_index]
 
-    return list
-
 
 if __name__ == '__main__':
     a = [5,4,8,6,1,2]
 
-    # print(bubble_sort(a))
-    # print(insertion_sort(a))
-    print(selection_sort(a))
+    bubble_sort(a)
+    print(a)
+    insertion_sort(a)
+    print(a)
+    selection_sort(a)
+    print(a)
